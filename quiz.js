@@ -1,135 +1,173 @@
+// 1. Config
+const PASS_THRESHOLD   = 4;
+const TOTAL_QUESTIONS  = allQuestions.length;
+
+// 2. Question Bank
 const allQuestions = [
-  { q: "How do you prefer to work?", type: "mcq", options: ["Alone", "In a team", "Hybrid", "Remote-only"], correct: "In a team" },
+  { q: "How do you prefer to work?", type: "mcq",
+    options: ["Alone", "In a team", "Hybrid", "Remote-only"], correct: "In a team" },
   { q: "What’s your current job role?", type: "text" },
-  { q: "What is 12 × 8?", type: "mcq", options: ["96", "88", "84", "108"], correct: "96", timer: 10 },
+  { q: "What is 12 × 8?", type: "mcq",
+    options: ["96", "88", "84", "108"], correct: "96", timer: 10 },
   { q: "Write one line describing your work ethic.", type: "text" },
-  { q: "What motivates you the most?", type: "mcq", options: ["Growth & learning", "Recognition", "Salary", "Job security"], correct: "Growth & learning" },
-  { q: "How do you prioritize tasks when everything seems important?", type: "mcq", options: ["Tackle urgent first", "Focus on long-term", "Delegate", "By order"], correct: "Tackle urgent first" },
+  { q: "What motivates you the most?", type: "mcq",
+    options: ["Growth & learning", "Recognition", "Salary", "Job security"], correct: "Growth & learning" },
+  { q: "How do you prioritize tasks when everything seems important?", type: "mcq",
+    options: ["Tackle urgent first", "Focus on long-term", "Delegate", "By order"], correct: "Tackle urgent first" },
   { q: "What’s one goal you want to achieve this year?", type: "text" },
-  { q: "What is 15 divided by 3?", type: "mcq", options: ["3", "4", "5", "6"], correct: "5" },
-  { q: "What does 'HTTP' stand for?", type: "mcq", options: ["Hypertext Transfer Protocol", "High Tech Platform", "Hyper Transport Protocol", "None"], correct: "Hypertext Transfer Protocol", timer: 10 },
-  { q: "Pick the odd one out: Apple, Banana, Orange, Chair", type: "mcq", options: ["Apple", "Banana", "Orange", "Chair"], correct: "Chair" },
-  { q: "What’s your expected monthly salary (USD)?", type: "mcq", options: ["<500", "500–1000", "1000–1500", "1500+"], correct: "500–1000" },
-  { q: "Are you currently employed?", type: "mcq", options: ["Yes", "No"], correct: "No" },
-  { q: "How do you handle missed deadlines?", type: "mcq", options: ["Communicate early", "Work overtime", "Ignore", "Blame"], correct: "Communicate early" },
+  { q: "What is 15 divided by 3?", type: "mcq",
+    options: ["3", "4", "5", "6"], correct: "5" },
+  { q: "What does 'HTTP' stand for?", type: "mcq",
+    options: ["Hypertext Transfer Protocol","High Tech Platform","Hyper Transport Protocol","None"],
+    correct: "Hypertext Transfer Protocol", timer: 10 },
+  { q: "Pick the odd one out: Apple, Banana, Orange, Chair", type: "mcq",
+    options: ["Apple","Banana","Orange","Chair"], correct: "Chair" },
+  { q: "What’s your expected monthly salary (USD)?", type: "mcq",
+    options: ["<500","500–1000","1000–1500","1500+"], correct: "500–1000" },
+  { q: "Are you currently employed?", type: "mcq",
+    options: ["Yes","No"], correct: "No" },
+  { q: "How do you handle missed deadlines?", type: "mcq",
+    options: ["Communicate early","Work overtime","Ignore","Blame"], correct: "Communicate early" },
   { q: "How do you handle criticism?", type: "text" },
   { q: "Why should we hire you?", type: "text" }
 ];
 
-let questions = [];
-let currentIndex = 0;
-let userAnswers = [];
-let correctCount = 0;
+// 3. State
+let questions     = [];
+let currentIndex  = 0;
+let correctCount  = 0;
+let candidate     = { fullName: "", whatsapp: "", passport: "" };
 let timerInterval;
 
-function startQuiz() {
-  const name = document.getElementById('fullName').value.trim();
-  const whatsapp = document.getElementById('whatsapp').value.trim();
-  const passport = document.getElementById('passport').value.trim();
+// 4. Helpers
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+function toggle(id, show) {
+  document.getElementById(id).hidden = !show;
+}
 
-  if (!name || !whatsapp || !passport) {
-    alert("Please fill in all required fields.");
+// 5. Start Quiz
+function startQuiz() {
+  candidate.fullName = document.getElementById("fullName").value.trim();
+  candidate.whatsapp = document.getElementById("whatsapp").value.trim();
+  candidate.passport  = document.getElementById("passport").value.trim();
+
+  if (!candidate.fullName || !candidate.whatsapp || !candidate.passport) {
+    alert("All fields are required to begin.");
     return;
   }
 
-  userAnswers = [{ fullName: name, whatsapp, passport }];
+  // Prepare & shuffle questions
+  questions = allQuestions.slice();
+  shuffle(questions);
 
-  questions = [...allQuestions]
-    .map(q => ({ q, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ q }) => q)
-    .slice(0, 7);
+  toggle("intro", false);
+  toggle("quiz",  true);
 
-  document.getElementById('intro').style.display = 'none';
-  document.getElementById('quiz').style.display = 'block';
-
+  document.getElementById("displayName").innerText = candidate.fullName;
   showQuestion();
 }
 
+// 6. Show Question
 function showQuestion() {
+  clearInterval(timerInterval);
   const qObj = questions[currentIndex];
-  document.getElementById('question-text').innerText = qObj.q;
-  document.getElementById('answer-options').innerHTML = '';
-  document.getElementById('nextBtn').style.display = 'none';
-  document.getElementById('timer').style.display = 'none';
 
-  if (qObj.type === 'mcq') {
-    qObj.options.forEach(option => {
-      const btn = document.createElement('button');
-      btn.innerText = option;
-      btn.onclick = () => {
-        document.querySelectorAll('#answer-options button').forEach(b => b.disabled = true);
-        userAnswers.push({ question: qObj.q, answer: option });
-        if (qObj.correct && option === qObj.correct) correctCount++;
-        clearInterval(timerInterval);
-        document.getElementById('nextBtn').style.display = 'block';
-      };
-      document.getElementById('answer-options').appendChild(btn);
+  document.getElementById("question-text").innerText =
+    `${currentIndex + 1}. ${qObj.q}`;
+  const container = document.getElementById("answer-options");
+  container.innerHTML = "";
+  document.getElementById("nextBtn").disabled = true;
+  toggle("timer", false);
+
+  if (qObj.type === "mcq") {
+    qObj.options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.innerText = opt;
+      btn.className = "option-btn";
+      btn.onclick = () => handleAnswer(opt, qObj.correct);
+      container.appendChild(btn);
     });
     if (qObj.timer) startTimer(qObj.timer);
-  } else if (qObj.type === 'text') {
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.placeholder = 'Your answer';
+  } else {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = "Your answer here";
     input.oninput = () => {
-      document.getElementById('nextBtn').style.display = input.value.trim() ? 'block' : 'none';
+      document.getElementById("nextBtn").disabled = !input.value.trim();
     };
-    input.onblur = () => {
-      userAnswers.push({ question: qObj.q, answer: input.value });
-    };
-    document.getElementById('answer-options').appendChild(input);
+    input.onblur   = () => handleAnswer(input.value.trim(), null);
+    container.appendChild(input);
   }
 }
 
-function startTimer(seconds) {
-  document.getElementById('timer').style.display = 'block';
-  let timeLeft = seconds;
-  document.getElementById('time').innerText = timeLeft;
+// 7. Handle Answer
+function handleAnswer(given, correct) {
+  if (correct && given === correct) correctCount++;
+  document.querySelectorAll("#answer-options button")
+          .forEach(b => b.disabled = true);
+  clearInterval(timerInterval);
+
+  const nextBtn = document.getElementById("nextBtn");
+  nextBtn.disabled   = false;
+  nextBtn.innerText  = currentIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Finish";
+}
+
+// 8. Timer
+function startTimer(sec) {
+  let t = sec;
+  toggle("timer", true);
+  document.getElementById("time").innerText = t;
 
   timerInterval = setInterval(() => {
-    timeLeft--;
-    document.getElementById('time').innerText = timeLeft;
-    if (timeLeft <= 0) {
+    t--;
+    document.getElementById("time").innerText = t;
+    if (t <= 0) {
       clearInterval(timerInterval);
-      document.getElementById('nextBtn').style.display = 'block';
-      document.querySelectorAll('#answer-options button').forEach(b => b.disabled = true);
+      document.getElementById("nextBtn").disabled = false;
+      document.querySelectorAll("#answer-options button").forEach(b => b.disabled = true);
     }
   }, 1000);
 }
 
+// 9. Next or Finish
 function nextQuestion() {
+  clearInterval(timerInterval);
   currentIndex++;
-  if (currentIndex < questions.length) {
+  if (currentIndex < TOTAL_QUESTIONS) {
     showQuestion();
   } else {
     finishQuiz();
   }
 }
 
+// 10. Show Results
 function finishQuiz() {
-  document.getElementById('quiz').style.display = 'none';
-  document.getElementById('result').style.display = 'block';
+  toggle("quiz",   false);
+  toggle("result", true);
 
-  const passThreshold = 4;
-  const passed = correctCount >= passThreshold;
+  const passed  = correctCount >= PASS_THRESHOLD;
+  const percent = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
 
-  const telegramLink = 'https://t.me/+c9h7F1lIXEszOTVl';
+  document.getElementById("resultName").innerText   = candidate.fullName;
+  const statusEl = document.getElementById("resultStatus");
+  statusEl.textContent = passed ? `Pass (${percent}%)` : `Fail (${percent}%)`;
+  statusEl.classList.toggle("pass", passed);
+  statusEl.classList.toggle("fail", !passed);
 
-  const resultMsg = passed
-    ? `✅ You passed the quiz take the screenshot and copy the link below and save it in your notepad this is the only proof that you have passed the quiz.\n\nYour application is shortlisted for interview.\n\n📌 Please download Telegram and join the group below:\n👉 ${telegramLink}\n\n⚠️ Make sure your Telegram display name matches your passport name to be accepted once you got approved send this screenshot in the group and wait for interview.`
-    : `❌ You did not pass the quiz.\n\nThank you for your time.`;
+  document.getElementById("detailed-score").innerText =
+    `You answered ${correctCount} of ${TOTAL_QUESTIONS} correctly.`;
 
-  document.getElementById('result-message').innerText = resultMsg;
-  sendToGoogleSheet();
+  document.getElementById("result-message").innerText =
+    passed
+      ? "✅ Congratulations! You're shortlisted for the interview. Please save this screenshot."
+      : "❌ Thank you for your time. Better luck next time.";
 }
 
-function sendToGoogleSheet() {
-  fetch('https://script.google.com/macros/s/AKfycbwdsuzmGNNrcNTi9QCarHlBCOAbk98VPZrM-zYXyBBGMG4CZySayGvYoRCstnZSLLmytg/exec', {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(userAnswers)
-  });
-}
+// 11. Bind Events
+document.getElementById("startBtn").addEventListener("click", startQuiz);
+document.getElementById("nextBtn").addEventListener("click", nextQuestion);
