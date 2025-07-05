@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <!-- ✅ Centered Alpha Logo -->
   <div class="logo-container">
     <img src="logo.png" alt="Alpha Logo" class="logo" />
@@ -19,10 +20,10 @@
     <input type="text" id="fullName" placeholder="Full Name (as per passport)" required />
     <input type="text" id="whatsapp" placeholder="WhatsApp Number" required />
     <input type="text" id="passport" placeholder="Passport Number" required />
-    <button onclick="startQuiz()">Start Quiz</button>
+    <button type="button" onclick="startQuiz()">Start Quiz</button>
   </div>
 
-  <!-- ❓ Quiz Question Box -->
+  <!-- ❓ Quiz Section -->
   <div class="container" id="quiz" style="display: none;">
     <div id="question-box">
       <p id="question-text"></p>
