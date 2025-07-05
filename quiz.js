@@ -1,174 +1,134 @@
-// 1. Question Bank
+// quiz.js – Alpha Quiz Final Logic
+
 const allQuestions = [
-  { q: "How do you prefer to work?", type: "mcq",
-    options: ["Alone","In a team","Hybrid","Remote-only"], correct: "In a team" },
+  { q: "How do you prefer to work?", type: "mcq", options: ["Alone", "In a team", "Hybrid", "Remote-only"], correct: "In a team" },
   { q: "What’s your current job role?", type: "text" },
-  { q: "What is 12 × 8?", type: "mcq",
-    options: ["96","88","84","108"], correct: "96" },
+  { q: "What is 12 × 8?", type: "mcq", options: ["96", "88", "84", "108"], correct: "96", timer: 10 },
   { q: "Write one line describing your work ethic.", type: "text" },
-  { q: "What motivates you the most?", type: "mcq",
-    options: ["Growth & learning","Recognition","Salary","Job security"], correct: "Growth & learning" },
+  { q: "What motivates you the most?", type: "mcq", options: ["Growth & learning", "Recognition", "Salary", "Job security"], correct: "Growth & learning" },
+  { q: "How do you prioritize tasks when everything seems important?", type: "mcq", options: ["Tackle urgent first", "Focus on long-term", "Delegate", "By order"], correct: "Tackle urgent first" },
   { q: "What’s one goal you want to achieve this year?", type: "text" },
-  { q: "What is 15 divided by 3?", type: "mcq",
-    options: ["3","4","5","6"], correct: "5" },
-  { q: "Pick the odd one out: Apple, Banana, Orange, Chair", type: "mcq",
-    options: ["Apple","Banana","Orange","Chair"], correct: "Chair" },
-  { q: "Are you currently employed?", type: "mcq",
-    options: ["Yes","No"], correct: "No" },
-  { q: "Why should we hire you?", type: "text" },
-  // … add more if needed
+  { q: "What is 15 divided by 3?", type: "mcq", options: ["3", "4", "5", "6"], correct: "5" },
+  { q: "What does 'HTTP' stand for?", type: "mcq", options: ["Hypertext Transfer Protocol", "High Tech Platform", "Hyper Transport Protocol", "None"], correct: "Hypertext Transfer Protocol", timer: 10 },
+  { q: "Pick the odd one out: Apple, Banana, Orange, Chair", type: "mcq", options: ["Apple", "Banana", "Orange", "Chair"], correct: "Chair" },
+  { q: "What’s your expected monthly salary (USD)?", type: "mcq", options: ["<500", "500–1000", "1000–1500", "1500+"], correct: "500–1000" },
+  { q: "Are you currently employed?", type: "mcq", options: ["Yes", "No"], correct: "No" },
+  { q: "How do you handle missed deadlines?", type: "mcq", options: ["Communicate early", "Work overtime", "Ignore", "Blame"], correct: "Communicate early" },
+  { q: "How do you handle criticism?", type: "text" },
+  { q: "Why should we hire you?", type: "text" }
 ];
 
-// 2. Config
-const MAX_QUESTIONS      = 10;
-const TIME_PER_QUESTION  = 20;    // seconds
-const PASS_PERCENT       = 70;
-const TELEGRAM_LINK      = "https://t.me/+c9h7F1lIXEszOTVl";
-const TELEGRAM_ID        = "@alphatech000";
+let questions = [],
+    currentIndex = 0,
+    userAnswers = [],
+    correctCount = 0,
+    timerInterval;
 
-// 3. State
-let questions    = [];
-let currentIndex = 0;
-let correctCount = 0;
-let candidate    = { fullName:"", whatsapp:"", passport:"" };
-let timerInterval;
-
-// 4. Helpers
-function shuffle(arr) {
-  for (let i = arr.length-1; i>0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-}
-function toggle(id, show) {
-  document.getElementById(id).hidden = !show;
-}
-
-// 5. Start Quiz
 function startQuiz() {
-  candidate.fullName = document.getElementById("fullName").value.trim();
-  candidate.whatsapp = document.getElementById("whatsapp").value.trim();
-  candidate.passport  = document.getElementById("passport").value.trim();
+  const name = document.getElementById('fullName').value.trim();
+  const whatsapp = document.getElementById('whatsapp').value.trim();
+  const passport = document.getElementById('passport').value.trim();
 
-  if (!candidate.fullName || !candidate.whatsapp || !candidate.passport) {
-    return alert("All fields are required.");
+  if (!name || !whatsapp || !passport) {
+    alert("Please fill in all required fields.");
+    return;
   }
 
-  // pick random questions
-  questions = allQuestions.slice();
-  shuffle(questions);
-  questions = questions.slice(0, MAX_QUESTIONS);
+  userAnswers = [{ fullName: name, whatsapp, passport }];
 
-  // show quiz
-  toggle("intro", false);
-  toggle("quiz",  true);
-  document.getElementById("displayName").innerText = candidate.fullName;
-  currentIndex = 0;
-  correctCount = 0;
+  questions = [...allQuestions]
+    .map(q => ({ q, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ q }) => q)
+    .slice(0, 7);
+
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
 
   showQuestion();
 }
 
-// 6. Show Question
 function showQuestion() {
-  clearInterval(timerInterval);
-  const q = questions[currentIndex];
-  document.getElementById("question-text").innerText = 
-    `${currentIndex+1}. ${q.q}`;
+  const qObj = questions[currentIndex];
+  document.getElementById('question-text').innerText = qObj.q;
+  document.getElementById('answer-options').innerHTML = '';
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('timer').style.display = 'none';
 
-  const opts = document.getElementById("answer-options");
-  opts.innerHTML = "";
-  document.getElementById("nextBtn").disabled = true;
-
-  // start timer
-  let t = TIME_PER_QUESTION;
-  document.getElementById("time").innerText = t;
-  toggle("timer", true);
-  timerInterval = setInterval(() => {
-    t--;
-    document.getElementById("time").innerText = t;
-    if (t <= 0) {
-      clearInterval(timerInterval);
-      selectAnswer(null, q.correct);
-    }
-  }, 1000);
-
-  if (q.type === "mcq") {
-    q.options.forEach(opt => {
-      const b = document.createElement("button");
-      b.innerText = opt;
-      b.className = "option-btn";
-      b.onclick = () => selectAnswer(opt, q.correct);
-      opts.appendChild(b);
+  if (qObj.type === 'mcq') {
+    qObj.options.forEach(option => {
+      const btn = document.createElement('button');
+      btn.innerText = option;
+      btn.onclick = () => {
+        document.querySelectorAll('#answer-options button').forEach(b => b.disabled = true);
+        userAnswers.push({ question: qObj.q, answer: option });
+        if (qObj.correct && option === qObj.correct) correctCount++;
+        clearInterval(timerInterval);
+        document.getElementById('nextBtn').style.display = 'block';
+      };
+      document.getElementById('answer-options').appendChild(btn);
     });
-  } else {
-    const inp = document.createElement("input");
-    inp.type = "text";
-    inp.placeholder = "Your answer";
-    inp.oninput = () => {
-      document.getElementById("nextBtn").disabled = !inp.value.trim();
+    if (qObj.timer) startTimer(qObj.timer);
+  } else if (qObj.type === 'text') {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Your answer';
+    input.oninput = () => {
+      document.getElementById('nextBtn').style.display = input.value.trim() ? 'block' : 'none';
     };
-    inp.onblur = () => selectAnswer(inp.value.trim(), null);
-    opts.appendChild(inp);
+    input.onblur = () => {
+      userAnswers.push({ question: qObj.q, answer: input.value });
+    };
+    document.getElementById('answer-options').appendChild(input);
   }
 }
 
-// 7. Handle Selection
-function selectAnswer(given, correct) {
-  clearInterval(timerInterval);
-  document.querySelectorAll("#answer-options button")
-          .forEach(b => b.disabled = true);
+function startTimer(seconds) {
+  document.getElementById('timer').style.display = 'block';
+  let timeLeft = seconds;
+  document.getElementById('time').innerText = timeLeft;
 
-  if (given && given === correct) correctCount++;
-
-  const btn = document.getElementById("nextBtn");
-  btn.disabled = false;
-  btn.innerText = currentIndex < MAX_QUESTIONS-1 ? "Next" : "Finish";
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    document.getElementById('time').innerText = timeLeft;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      document.getElementById('nextBtn').style.display = 'block';
+      document.querySelectorAll('#answer-options button').forEach(b => b.disabled = true);
+    }
+  }, 1000);
 }
 
-// 8. Next or Finish
 function nextQuestion() {
   currentIndex++;
-  if (currentIndex < MAX_QUESTIONS) {
+  if (currentIndex < questions.length) {
     showQuestion();
   } else {
     finishQuiz();
   }
 }
 
-// 9. Finish Quiz
 function finishQuiz() {
-  toggle("quiz", false);
-  toggle("result", true);
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('result').style.display = 'block';
 
-  const pct    = Math.round((correctCount/MAX_QUESTIONS)*100);
-  const passed = pct >= PASS_PERCENT;
+  const passThreshold = 4;
+  const passed = correctCount >= passThreshold;
+  const resultMsg = passed
+    ? `✅ You passed the quiz. Your application is shortlisted.\nJoin Telegram group: https://t.me/+c9h7F1lIXEszOTVl\nMake sure your display name matches your passport name.`
+    : `❌ You did not pass the quiz. Thank you for your time.`;
 
-  document.getElementById("resultName").innerText   = candidate.fullName;
-  const st = document.getElementById("resultStatus");
-  st.innerText = passed ? `Pass (${pct}%)` : `Fail (${pct}%)`;
-  st.className = passed ? "pass" : "fail";
-
-  document.getElementById("detailed-score").innerText =
-    `Correct: ${correctCount} / ${MAX_QUESTIONS}`;
-
-  if (passed) {
-    document.getElementById("result-message").innerText =
-`✅ Congratulations, you passed with ${pct}%!
-This screenshot is your only proof.
-
-Join our Telegram group:
-${TELEGRAM_LINK}
-
-After joining, post this screenshot under ${TELEGRAM_ID}.`;
-  } else {
-    document.getElementById("result-message").innerText =
-`❌ You did not pass the quiz.
-Thank you for your time.`;
-  }
+  document.getElementById('result-message').innerText = resultMsg;
+  sendToGoogleSheet();
 }
 
-// 10. Bind Events
-document.getElementById("startBtn").addEventListener("click", startQuiz);
-document.getElementById("nextBtn").addEventListener("click", nextQuestion);
-```
+function sendToGoogleSheet() {
+  fetch('https://script.google.com/macros/s/AKfycbwdsuzmGNNrcNTi9QCarHlBCOAbk98VPZrM-zYXyBBGMG4CZySayGvYoRCstnZSLLmytg/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(userAnswers)
+  });
+}
