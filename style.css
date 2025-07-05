@@ -10,8 +10,11 @@
 
 /* Reset & Base */
 * {
-  margin: 0; padding: 0; box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
+
 body {
   background: var(--white);
   color: var(--text-dark);
@@ -19,25 +22,27 @@ body {
   line-height: 1.5;
 }
 
-/* Container Panels */
+/* Wrapper & Panels */
 .wrapper {
   width: 90%;
   max-width: 600px;
   margin: 2rem auto;
 }
+
 .container {
   background: var(--panel-bg);
   border-radius: var(--radius);
   padding: 2rem 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Shouting Welcome */
+/* Welcome Animation */
 .welcome-container {
   text-align: center;
   margin-bottom: 1rem;
 }
+
 @keyframes scream {
   0%   { transform: scale(1) rotate(0); color: var(--danger); }
   25%  { transform: scale(1.1) rotate(-3deg); color: var(--gold); }
@@ -45,6 +50,7 @@ body {
   75%  { transform: scale(1.1) rotate(3deg); color: var(--gold); }
   100% { transform: scale(1) rotate(0); color: var(--danger); }
 }
+
 .scream-text {
   font-size: 2rem;
   font-weight: bold;
@@ -60,16 +66,19 @@ h2 {
 }
 
 /* Inputs & Buttons */
-input, button {
+input,
+button {
   width: 100%;
   font-size: 1rem;
   margin-top: 1rem;
 }
+
 input {
   padding: 0.75rem;
   border: 1px solid #ccc;
   border-radius: var(--radius);
 }
+
 button {
   padding: 0.75rem;
   background: var(--text-dark);
@@ -79,13 +88,15 @@ button {
   cursor: pointer;
   transition: transform 0.1s, box-shadow 0.2s;
 }
+
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
 button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Candidate Info */
@@ -100,7 +111,7 @@ button:hover:not(:disabled) {
   border: 2px solid var(--gold);
   border-radius: var(--radius);
   background: var(--white);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Shiny Question Text */
@@ -108,6 +119,7 @@ button:hover:not(:disabled) {
   0%   { background-position: -150% 0; }
   100% { background-position: 150% 0; }
 }
+
 .shiny-text {
   font-size: 1.25rem;
   font-weight: 600;
@@ -130,6 +142,7 @@ button:hover:not(:disabled) {
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
+
 .option-btn {
   padding: 0.75rem;
   border: 1px solid #ccc;
@@ -138,6 +151,7 @@ button:hover:not(:disabled) {
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
 }
+
 .option-btn:hover:not(:disabled) {
   background: #f0f0f0;
   border-color: var(--gold);
@@ -159,6 +173,7 @@ button:hover:not(:disabled) {
 #detailed-score {
   margin: 1rem 0;
 }
+
 #result-message {
   white-space: pre-wrap;
   line-height: 1.4;
@@ -169,12 +184,13 @@ button:hover:not(:disabled) {
   color: var(--gold);
   font-weight: 600;
 }
+
 .fail {
   color: var(--danger);
   font-weight: 600;
 }
 
-/* Responsive */
+/* Responsive Breakpoints */
 @media (min-width: 600px) {
   #answer-options {
     grid-template-columns: repeat(2, 1fr);
@@ -185,4 +201,35 @@ button:hover:not(:disabled) {
     display: block;
     padding: 0.75rem 1.5rem;
   }
+}
+
+@media (min-width: 1024px) {
+  .wrapper {
+    width: 80%;
+  }
+  .container {
+    padding: 2rem;
+  }
+}
+
+/* Override to ensure all text is dark except button labels */
+body,
+h2,
+p,
+label,
+input,
+section,
+.container,
+.welcome-container,
+.scream-text,
+#question-text,
+.option-btn,
+.result-header p,
+#detailed-score,
+#result-message {
+  color: var(--text-dark) !important;
+}
+
+button {
+  color: var(--white) !important;
 }
