@@ -1,116 +1,126 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+:root {
+  --primary-color:   #2c3e50;
+  --secondary-color: #3498db;
+  --success-color:   #27ae60;
+  --danger-color:    #e74c3c;
+  --light-bg:        #f7f9fa;
+  --font-family:     'Helvetica Neue', Arial, sans-serif;
+  --radius:          6px;
+}
 
+/* Reset & Base */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  margin: 0;
-  padding: 0;
-  background: #1e1e2f;
-  font-family: 'Inter', sans-serif;
-  color: #f3f3f3;
+  font-family: var(--font-family);
+  background: var(--light-bg);
+  color: var(--primary-color);
+  line-height: 1.5;
 }
 
+/* Wrapper & Containers */
 .wrapper {
-  padding: 16px;
-  max-width: 640px;
-  margin: 0 auto;
+  width: 90%;
+  max-width: 600px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.container {
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid #ececec;
+}
+.container:last-of-type {
+  border-bottom: none;
 }
 
+/* Logo */
 .logo-container {
   text-align: center;
-  margin-top: 40px;
-  margin-bottom: 20px;
+  background: var(--secondary-color);
+  padding: 1rem;
+}
+.logo-container img {
+  max-height: 50px;
 }
 
-.logo {
-  max-width: 120px;
-  border-radius: 14px;
-  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.4));
-  animation: logoFadeIn 1s ease-out;
-}
-
-.container {
-  background: #2a2a3d;
-  border-radius: 16px;
-  padding: 24px;
-  margin: 20px 0;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-}
-
-h2 {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #ffffff;
-}
-
-p {
-  font-size: 15px;
-  color: #ccc;
-}
-
-input[type="text"] {
+/* Inputs & Buttons */
+input, button {
   width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  font-size: 16px;
-  border-radius: 10px;
-  border: none;
-  background: #3a3a4d;
-  color: #fff;
-  box-sizing: border-box;
+  font-size: 1rem;
+  margin-top: 1rem;
 }
-
+input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+}
 button {
-  width: 100%;
-  background-color: #6366f1;
-  color: white;
-  padding: 14px;
+  padding: 0.75rem;
+  background: var(--secondary-color);
+  color: #fff;
   border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  margin-top: 16px;
+  border-radius: var(--radius);
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: background 0.2s;
+}
+button:disabled {
+  background: #bbb;
+  cursor: not-allowed;
+}
+button:hover:not(:disabled) {
+  background: #2980b9;
 }
 
-button:hover {
-  background-color: #4f46e5;
+/* Quiz & Questions */
+.candidate-info { margin-bottom: 1rem; }
+#question-text {
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
-
-#answer-options button {
-  margin: 8px 0;
-  width: 100%;
-  background-color: #444459;
+#answer-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
-
+.option-btn {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.option-btn:hover:not(:disabled) {
+  background: var(--light-bg);
+  border-color: var(--secondary-color);
+}
 #timer {
-  margin-top: 12px;
-  color: #ff7675;
-  font-weight: bold;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--danger-color);
 }
 
-#result-message {
-  background-color: #333344;
-  border: 2px dashed #8888aa;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 12px;
-  font-size: 16px;
-  color: #f1f1f1;
-}
+/* Results */
+.result-header p { margin-bottom: 0.5rem; }
+#detailed-score { margin: 1rem 0; }
+#result-message { white-space: pre-wrap; line-height: 1.4; }
+.pass { color: var(--success-color); font-weight: 600; }
+.fail { color: var(--danger-color); font-weight: 600; }
 
-@keyframes logoFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
+/* Tablet & Desktop */
+@media (min-width: 600px) {
+  #answer-options { grid-template-columns: repeat(2, 1fr); }
+  #nextBtn {
+    width: auto;
+    padding: 0.75rem 1.5rem;
+    margin-left: auto;
+    display: block;
   }
 }
-
-@media (max-width: 480px) {
-  .container {
-    padding: 20px;
-  }
+@media (min-width: 1024px) {
+  .wrapper { width: 80%; }
+  .container { padding: 2rem; }
 }
