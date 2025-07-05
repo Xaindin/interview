@@ -1,4 +1,4 @@
-/* style.css - Professional UI Design */
+/* style.css – Alpha Quiz UI Design */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
@@ -9,8 +9,9 @@ body {
   background: linear-gradient(135deg, #e0eafc, #cfdef3);
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   animation: backgroundMove 10s infinite alternate;
 }
 
@@ -27,11 +28,14 @@ body {
   max-width: 600px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.1);
   text-align: center;
+  margin: 20px auto;
+  animation: fadeIn 1.2s ease-out;
 }
 
 h2 {
   margin-bottom: 10px;
   font-weight: 600;
+  color: #111827;
 }
 
 p {
@@ -58,7 +62,7 @@ button {
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease;
 }
 
 button:hover {
@@ -89,29 +93,42 @@ button:disabled {
   border: 2px dashed #4B5563;
   border-radius: 12px;
   margin-top: 20px;
+  color: #111827;
 }
 
-/* 🔥 Alpha Logo Entry Animation */
-@keyframes fadeInUp {
-  0% {
+/* 📱 Responsive for Mobile */
+@media (max-width: 600px) {
+  .container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  input[type="text"],
+  button {
+    font-size: 15px;
+  }
+}
+
+/* 🎞️ Entry Animation */
+@keyframes fadeIn {
+  from {
     opacity: 0;
     transform: translateY(20px);
   }
-  100% {
+  to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.logo-entry {
-  animation: fadeInUp 1s ease-out forwards;
-  opacity: 0;
-}
-
-/* 📱 Responsive Tweaks */
-@media (max-width: 600px) {
-  .container {
-    margin: 20px;
-    padding: 20px;
+/* 🐺 Logo Fade-In */
+@keyframes logoFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
