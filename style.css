@@ -13,6 +13,8 @@ body {
   align-items: center;
   justify-content: flex-start;
   animation: backgroundMove 10s infinite alternate;
+  background-size: 200% 200%;
+  overflow-x: hidden;
 }
 
 @keyframes backgroundMove {
@@ -68,6 +70,7 @@ button {
 button:hover {
   background-color: #4338CA;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
 }
 
 button:disabled {
@@ -131,4 +134,13 @@ button:disabled {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+.logo-entry {
+  display: block;
+  margin: 40px auto 20px;
+  max-width: 160px;
+  border-radius: 12px;
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+  animation: logoFadeIn 1.2s ease-out;
 }
