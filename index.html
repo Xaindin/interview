@@ -2,48 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Candidate Screening Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Candidate Interview Quiz</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <div class="wrapper">
-
-    <!-- Intro / Details Form -->
-    <section class="panel" id="intro">
-      <h1>Candidate Screening Quiz</h1>
-      <p>Please enter your details to begin:</p>
-      <input type="text" id="fullName"   placeholder="Full Name (as per passport)" />
-      <input type="tel"   id="whatsapp"  placeholder="WhatsApp Number" />
-      <input type="text"  id="passport"  placeholder="Passport Number" />
-      <button id="startBtn">Start Quiz</button>
-    </section>
-
-    <!-- Quiz Section -->
-    <section class="panel" id="quiz" hidden>
-      <div class="info-bar">
-        <span><strong>Candidate:</strong> <span id="displayName"></span></span>
-        <span class="timer">⏳ <span id="time">20</span>s</span>
-      </div>
-      <div class="question-box">
-        <p id="question-text"></p>
-        <div id="answer-options"></div>
-      </div>
-      <button id="nextBtn" disabled>Next</button>
-    </section>
-
-    <!-- Result Section -->
-    <section class="panel" id="result" hidden>
-      <h1>Quiz Completed</h1>
-      <p><strong>Candidate:</strong> <span id="resultName"></span></p>
-      <p><strong>Status:</strong> <span id="resultStatus"></span></p>
-      <p id="detailed-score"></p>
-      <pre id="result-message"></pre>
-    </section>
-
+  <!-- ✅ Centered Alpha Logo -->
+  <div class="logo-container">
+    <img src="logo.png" alt="Alpha Logo" class="logo" />
   </div>
 
+  <!-- 👤 Candidate Info Input -->
+  <div class="container" id="intro">
+    <h2>Candidate Screening Quiz</h2>
+    <p>Please fill your details to begin:</p>
+    <input type="text" id="fullName" placeholder="Full Name (as per passport)" required />
+    <input type="text" id="whatsapp" placeholder="WhatsApp Number" required />
+    <input type="text" id="passport" placeholder="Passport Number" required />
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- ❓ Quiz Question Box -->
+  <div class="container" id="quiz" style="display: none;">
+    <div id="question-box">
+      <p id="question-text"></p>
+      <div id="answer-options"></div>
+      <p id="timer" style="display: none;">⏳ Time left: <span id="time">10</span>s</p>
+      <button id="nextBtn" onclick="nextQuestion()" style="display: none;">Next</button>
+    </div>
+  </div>
+
+  <!-- ✅ Final Result -->
+  <div class="container" id="result" style="display: none;">
+    <h2>Quiz Completed</h2>
+    <p id="result-message"></p>
+  </div>
+
+  <!-- 📜 JS Logic -->
   <script src="quiz.js"></script>
 </body>
 </html>
