@@ -8,36 +8,39 @@
 </head>
 <body>
 
-  <!-- ✅ Centered Logo -->
-  <img src="logo.png" alt="Alpha Logo" class="logo-img" />
+  <div class="wrapper">
+    <!-- Alpha Logo -->
+    <div class="logo-container">
+      <img src="logo.png" alt="Alpha Logo" class="logo" />
+    </div>
 
-  <!-- 👤 Candidate Info Input -->
-  <div class="container" id="intro">
-    <h2>Candidate Screening Quiz</h2>
-    <p>Please fill your details to begin:</p>
-    <input type="text" id="fullName" placeholder="Full Name (as per passport)" required />
-    <input type="text" id="whatsapp" placeholder="WhatsApp Number" required />
-    <input type="text" id="passport" placeholder="Passport Number" required />
-    <button onclick="startQuiz()">Start Quiz</button>
-  </div>
+    <!-- Quiz Intro -->
+    <div class="container" id="intro">
+      <h2>Candidate Screening Quiz</h2>
+      <p>Please fill your details to begin:</p>
+      <input type="text" id="fullName" placeholder="Full Name (as per passport)" required />
+      <input type="text" id="whatsapp" placeholder="WhatsApp Number" required />
+      <input type="text" id="passport" placeholder="Passport Number" required />
+      <button onclick="startQuiz()">Start Quiz</button>
+    </div>
 
-  <!-- ❓ Quiz Question Box -->
-  <div class="container" id="quiz" style="display: none;">
-    <div id="question-box">
-      <p id="question-text"></p>
-      <div id="answer-options"></div>
-      <p id="timer" style="display: none;">⏳ Time left: <span id="time">10</span>s</p>
-      <button id="nextBtn" onclick="nextQuestion()" style="display: none;">Next</button>
+    <!-- Quiz Box -->
+    <div class="container" id="quiz" style="display: none;">
+      <div id="question-box">
+        <p id="question-text"></p>
+        <div id="answer-options"></div>
+        <p id="timer" style="display: none;">⏳ Time left: <span id="time">10</span>s</p>
+        <button id="nextBtn" onclick="nextQuestion()" style="display: none;">Next</button>
+      </div>
+    </div>
+
+    <!-- Quiz Result -->
+    <div class="container" id="result" style="display: none;">
+      <h2>Quiz Completed</h2>
+      <p id="result-message"></p>
     </div>
   </div>
 
-  <!-- ✅ Final Result -->
-  <div class="container" id="result" style="display: none;">
-    <h2>Quiz Completed</h2>
-    <p id="result-message"></p>
-  </div>
-
-  <!-- 📜 JS Logic -->
   <script src="quiz.js"></script>
 </body>
 </html>
