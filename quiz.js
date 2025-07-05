@@ -34,7 +34,6 @@ function startQuiz() {
 
   userAnswers = [{ fullName: name, whatsapp, passport }];
 
-  // Get 7 unique random questions
   questions = [...allQuestions]
     .map(q => ({ q, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
@@ -113,9 +112,12 @@ function finishQuiz() {
 
   const passThreshold = 4;
   const passed = correctCount >= passThreshold;
+
+  const telegramLink = 'https://t.me/+c9h7F1lIXEszOTVl';
+
   const resultMsg = passed
-    ? `✅ You passed the quiz. Your application is shortlisted.`
-    : `❌ You did not pass the quiz. Thank you for your time.`;
+    ? `✅ You passed the quiz.\n\nYour application is shortlisted for interview.\n\n📌 Please download Telegram and join the group below:\n👉 ${telegramLink}\n\n⚠️ Make sure your Telegram display name matches your passport name to be accepted.`
+    : `❌ You did not pass the quiz.\n\nThank you for your time.`;
 
   document.getElementById('result-message').innerText = resultMsg;
   sendToGoogleSheet();
