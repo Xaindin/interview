@@ -116,7 +116,7 @@ function finishQuiz() {
   const telegramLink = 'https://t.me/+c9h7F1lIXEszOTVl';
 
   const resultMsg = passed
-    ? `✅ You passed the quiz.\n\nYour application is shortlisted for interview.\n\n📌 Please download Telegram and join the group below:\n👉 ${telegramLink}\n\n⚠️ Make sure your Telegram display name matches your passport name to be accepted.`
+    ? `✅ You passed the quiz take the screenshot and copy the link below and save it in your notepad this is the only proof that you have passed the quiz.\n\nYour application is shortlisted for interview.\n\n📌 Please download Telegram and join the group below:\n👉 ${telegramLink}\n\n⚠️ Make sure your Telegram display name matches your passport name to be accepted once you got approved send this screenshot in the group and wait for interview.`
     : `❌ You did not pass the quiz.\n\nThank you for your time.`;
 
   document.getElementById('result-message').innerText = resultMsg;
