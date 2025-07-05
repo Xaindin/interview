@@ -1,5 +1,3 @@
-// quiz.js (Now with: 7 random questions + click prevention + scoring + pass/fail)
-
 const allQuestions = [
   { q: "How do you prefer to work?", type: "mcq", options: ["Alone", "In a team", "Hybrid", "Remote-only"], correct: "In a team" },
   { q: "What’s your current job role?", type: "text" },
@@ -15,7 +13,7 @@ const allQuestions = [
   { q: "Are you currently employed?", type: "mcq", options: ["Yes", "No"], correct: "No" },
   { q: "How do you handle missed deadlines?", type: "mcq", options: ["Communicate early", "Work overtime", "Ignore", "Blame"], correct: "Communicate early" },
   { q: "How do you handle criticism?", type: "text" },
-  { q: "Why should we hire you?", type: "text" },
+  { q: "Why should we hire you?", type: "text" }
 ];
 
 let questions = [];
@@ -23,11 +21,6 @@ let currentIndex = 0;
 let userAnswers = [];
 let correctCount = 0;
 let timerInterval;
-
-function getRandomQuestions(n) {
-  const shuffled = allQuestions.sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, n);
-}
 
 function startQuiz() {
   const name = document.getElementById('fullName').value.trim();
@@ -40,7 +33,13 @@ function startQuiz() {
   }
 
   userAnswers = [{ fullName: name, whatsapp, passport }];
-  questions = getRandomQuestions(7);
+
+  // Get 7 unique random questions
+  questions = [...allQuestions]
+    .map(q => ({ q, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ q }) => q)
+    .slice(0, 7);
 
   document.getElementById('intro').style.display = 'none';
   document.getElementById('quiz').style.display = 'block';
@@ -78,7 +77,7 @@ function showQuestion() {
     };
     input.onblur = () => {
       userAnswers.push({ question: qObj.q, answer: input.value });
-    }
+    };
     document.getElementById('answer-options').appendChild(input);
   }
 }
@@ -112,7 +111,7 @@ function finishQuiz() {
   document.getElementById('quiz').style.display = 'none';
   document.getElementById('result').style.display = 'block';
 
-  const passThreshold = 4; // minimum 4 correct out of 7
+  const passThreshold = 4;
   const passed = correctCount >= passThreshold;
   const resultMsg = passed
     ? `✅ You passed the quiz. Your application is shortlisted.`
