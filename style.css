@@ -1,67 +1,62 @@
-/* style.css – Alpha Quiz UI Final */
-
+/* Alpha Quiz – Dark Theme UI */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
-* {
-  box-sizing: border-box;
-}
 
 body {
   margin: 0;
-  padding: 0;
+  padding: 20px;
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(145deg, #0f172a, #1e293b);
-  color: #f1f5f9;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px;
+  color: #fff;
 }
 
 .logo-container {
   text-align: center;
-  margin: 20px auto 10px;
+  margin: 30px 0 10px;
 }
 
 .logo {
   max-width: 120px;
   border-radius: 16px;
-  animation: logoFadeIn 1.2s ease-out;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
 }
 
 .container {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 24px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 30px;
   width: 100%;
   max-width: 480px;
-  margin: 12px auto;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.3);
-  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  margin: 20px;
+  animation: fadeIn 0.7s ease-in-out;
 }
 
 h2 {
+  font-weight: 600;
   margin-bottom: 8px;
   font-size: 22px;
-  color: #f8fafc;
+  text-align: center;
 }
 
 p {
-  font-size: 15px;
-  color: #e2e8f0;
+  font-size: 14px;
+  color: #cbd5e1;
+  text-align: center;
 }
 
 input[type="text"] {
   width: 100%;
-  padding: 12px;
+  padding: 12px 14px;
   margin: 10px 0;
-  font-size: 15px;
-  border-radius: 10px;
   border: none;
-  background: #e2e8f0;
+  border-radius: 10px;
+  background-color: #cbd5e1;
+  font-size: 16px;
   color: #111827;
 }
 
@@ -69,61 +64,65 @@ button {
   width: 100%;
   background-color: #6366f1;
   color: white;
-  padding: 12px;
+  padding: 12px 20px;
   border: none;
   border-radius: 10px;
-  margin-top: 20px;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: background 0.3s ease;
+  margin-top: 20px;
 }
 
 button:hover {
   background-color: #4f46e5;
 }
 
-button:disabled {
-  background-color: #94a3b8;
-  cursor: not-allowed;
+#answer-options button {
+  margin: 8px 0;
+  width: 100%;
 }
 
 #timer {
   font-weight: 600;
   color: #f87171;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 #result-message {
   font-size: 18px;
-  margin-top: 20px;
-  background: #1e293b;
-  padding: 20px;
+  padding: 16px;
+  background-color: #334155;
+  border-left: 4px solid #6366f1;
   border-radius: 12px;
-  border: 1px dashed #94a3b8;
+  margin-top: 20px;
   color: #f8fafc;
 }
 
-/* Animations */
-@keyframes logoFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.92);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Responsive Fixes */
+/* Responsive Fix */
 @media (max-width: 480px) {
   .container {
-    padding: 20px 16px;
-    margin: 16px 8px;
+    padding: 20px;
+    margin: 10px;
+  }
+
+  h2 {
+    font-size: 20px;
   }
 
   input[type="text"],
   button {
-    font-size: 14px;
+    font-size: 15px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
