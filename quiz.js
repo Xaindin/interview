@@ -108,7 +108,7 @@ function finishQuiz() {
 }
 
 function sendToGoogleSheet() {
-  fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+  fetch('https://script.google.com/macros/s/AKfycbwdsuzmGNNrcNTi9QCarHlBCOAbk98VPZrM-zYXyBBGMG4CZySayGvYoRCstnZSLLmytg/exec', {
     method: 'POST',
     mode: 'no-cors',
     headers: {
