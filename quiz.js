@@ -1,29 +1,33 @@
-const questions = [
-  {
-    q: "How do you prefer to work?",
-    type: "mcq",
-    options: ["Alone", "In a team", "Hybrid", "Remote-only"]
-  },
-  {
-    q: "What’s your current job role?",
-    type: "text"
-  },
-  {
-    q: "What is 12 × 8?",
-    type: "mcq",
-    options: ["96", "88", "84", "108"],
-    correct: "96",
-    timer: 10
-  },
-  {
-    q: "Write one line describing your work ethic.",
-    type: "text"
-  }
+// quiz.js (Now with: 7 random questions + click prevention + scoring + pass/fail)
+
+const allQuestions = [
+  { q: "How do you prefer to work?", type: "mcq", options: ["Alone", "In a team", "Hybrid", "Remote-only"], correct: "In a team" },
+  { q: "What’s your current job role?", type: "text" },
+  { q: "What is 12 × 8?", type: "mcq", options: ["96", "88", "84", "108"], correct: "96", timer: 10 },
+  { q: "Write one line describing your work ethic.", type: "text" },
+  { q: "What motivates you the most?", type: "mcq", options: ["Growth & learning", "Recognition", "Salary", "Job security"], correct: "Growth & learning" },
+  { q: "How do you prioritize tasks when everything seems important?", type: "mcq", options: ["Tackle urgent first", "Focus on long-term", "Delegate", "By order"], correct: "Tackle urgent first" },
+  { q: "What’s one goal you want to achieve this year?", type: "text" },
+  { q: "What is 15 divided by 3?", type: "mcq", options: ["3", "4", "5", "6"], correct: "5" },
+  { q: "What does 'HTTP' stand for?", type: "mcq", options: ["Hypertext Transfer Protocol", "High Tech Platform", "Hyper Transport Protocol", "None"], correct: "Hypertext Transfer Protocol", timer: 10 },
+  { q: "Pick the odd one out: Apple, Banana, Orange, Chair", type: "mcq", options: ["Apple", "Banana", "Orange", "Chair"], correct: "Chair" },
+  { q: "What’s your expected monthly salary (USD)?", type: "mcq", options: ["<500", "500–1000", "1000–1500", "1500+"], correct: "500–1000" },
+  { q: "Are you currently employed?", type: "mcq", options: ["Yes", "No"], correct: "No" },
+  { q: "How do you handle missed deadlines?", type: "mcq", options: ["Communicate early", "Work overtime", "Ignore", "Blame"], correct: "Communicate early" },
+  { q: "How do you handle criticism?", type: "text" },
+  { q: "Why should we hire you?", type: "text" },
 ];
 
+let questions = [];
 let currentIndex = 0;
 let userAnswers = [];
+let correctCount = 0;
 let timerInterval;
+
+function getRandomQuestions(n) {
+  const shuffled = allQuestions.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, n);
+}
 
 function startQuiz() {
   const name = document.getElementById('fullName').value.trim();
@@ -35,7 +39,8 @@ function startQuiz() {
     return;
   }
 
-  userAnswers.push({ fullName: name, whatsapp, passport });
+  userAnswers = [{ fullName: name, whatsapp, passport }];
+  questions = getRandomQuestions(7);
 
   document.getElementById('intro').style.display = 'none';
   document.getElementById('quiz').style.display = 'block';
@@ -48,13 +53,16 @@ function showQuestion() {
   document.getElementById('question-text').innerText = qObj.q;
   document.getElementById('answer-options').innerHTML = '';
   document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('timer').style.display = 'none';
 
   if (qObj.type === 'mcq') {
     qObj.options.forEach(option => {
       const btn = document.createElement('button');
       btn.innerText = option;
       btn.onclick = () => {
+        document.querySelectorAll('#answer-options button').forEach(b => b.disabled = true);
         userAnswers.push({ question: qObj.q, answer: option });
+        if (qObj.correct && option === qObj.correct) correctCount++;
         clearInterval(timerInterval);
         document.getElementById('nextBtn').style.display = 'block';
       };
@@ -66,8 +74,11 @@ function showQuestion() {
     input.type = 'text';
     input.placeholder = 'Your answer';
     input.oninput = () => {
-      document.getElementById('nextBtn').style.display = 'block';
+      document.getElementById('nextBtn').style.display = input.value.trim() ? 'block' : 'none';
     };
+    input.onblur = () => {
+      userAnswers.push({ question: qObj.q, answer: input.value });
+    }
     document.getElementById('answer-options').appendChild(input);
   }
 }
@@ -83,15 +94,12 @@ function startTimer(seconds) {
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
       document.getElementById('nextBtn').style.display = 'block';
+      document.querySelectorAll('#answer-options button').forEach(b => b.disabled = true);
     }
   }, 1000);
 }
 
 function nextQuestion() {
-  const input = document.querySelector('#answer-options input');
-  if (input) {
-    userAnswers.push({ question: questions[currentIndex].q, answer: input.value });
-  }
   currentIndex++;
   if (currentIndex < questions.length) {
     showQuestion();
@@ -103,7 +111,14 @@ function nextQuestion() {
 function finishQuiz() {
   document.getElementById('quiz').style.display = 'none';
   document.getElementById('result').style.display = 'block';
-  document.getElementById('result-message').innerText = '✅ Thank you. Your responses have been recorded.';
+
+  const passThreshold = 4; // minimum 4 correct out of 7
+  const passed = correctCount >= passThreshold;
+  const resultMsg = passed
+    ? `✅ You passed the quiz. Your application is shortlisted.`
+    : `❌ You did not pass the quiz. Thank you for your time.`;
+
+  document.getElementById('result-message').innerText = resultMsg;
   sendToGoogleSheet();
 }
 
