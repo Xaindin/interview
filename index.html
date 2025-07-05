@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Candidate Screening Quiz</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -10,51 +10,40 @@
 
   <div class="wrapper">
 
-    <!-- Shouting Welcome -->
-    <div class="welcome-container">
-      <p class="scream-text">🚀 WELCOME TO ALPHA!!! 🚀</p>
-    </div>
-
     <!-- Intro / Details Form -->
-    <section class="container" id="intro">
-      <h2>Candidate Screening Quiz</h2>
+    <section class="panel" id="intro">
+      <h1>Candidate Screening Quiz</h1>
       <p>Please enter your details to begin:</p>
-      <input type="text" id="fullName" placeholder="Full Name (as per passport)" />
-      <input type="tel"   id="whatsapp" placeholder="WhatsApp Number" />
-      <input type="text"  id="passport" placeholder="Passport Number" />
+      <input type="text" id="fullName"   placeholder="Full Name (as per passport)" />
+      <input type="tel"   id="whatsapp"  placeholder="WhatsApp Number" />
+      <input type="text"  id="passport"  placeholder="Passport Number" />
       <button id="startBtn">Start Quiz</button>
     </section>
 
     <!-- Quiz Section -->
-    <section class="container" id="quiz" hidden>
-      <h2>Quiz In Progress</h2>
-      <div class="candidate-info">
-        <strong>Candidate:</strong> <span id="displayName"></span>
+    <section class="panel" id="quiz" hidden>
+      <div class="info-bar">
+        <span><strong>Candidate:</strong> <span id="displayName"></span></span>
+        <span class="timer">⏳ <span id="time">20</span>s</span>
       </div>
-      <div id="question-box">
-        <p id="question-text" class="shiny-text"></p>
+      <div class="question-box">
+        <p id="question-text"></p>
         <div id="answer-options"></div>
-        <div id="timer" hidden>
-          ⏳ Time left: <span id="time">0</span>s
-        </div>
-        <button id="nextBtn" disabled>Next</button>
       </div>
+      <button id="nextBtn" disabled>Next</button>
     </section>
 
     <!-- Result Section -->
-    <section class="container" id="result" hidden>
-      <h2>Quiz Completed</h2>
-      <div class="result-header">
-        <p><strong>Candidate:</strong> <span id="resultName"></span></p>
-        <p><strong>Status:</strong> <span id="resultStatus"></span></p>
-      </div>
+    <section class="panel" id="result" hidden>
+      <h1>Quiz Completed</h1>
+      <p><strong>Candidate:</strong> <span id="resultName"></span></p>
+      <p><strong>Status:</strong> <span id="resultStatus"></span></p>
       <p id="detailed-score"></p>
-      <p id="result-message"></p>
+      <pre id="result-message"></pre>
     </section>
 
   </div>
 
-  <!-- Your JS at the very end -->
   <script src="quiz.js"></script>
 </body>
 </html>
