@@ -1,6 +1,6 @@
 // quiz.js
 
-// 1. Question Bank (define your full list here)
+// 1. Question Bank
 const allQuestions = [
   { q: "How do you prefer to work?", type: "mcq",
     options: ["Alone", "In a team", "Hybrid", "Remote-only"], correct: "In a team" },
@@ -33,6 +33,8 @@ const allQuestions = [
 // 2. Configuration
 const PASS_THRESHOLD  = 4;
 const TOTAL_QUESTIONS = allQuestions.length;
+const TELEGRAM_LINK   = 'https://t.me/+c9h7F1lIXEszOTVl';
+const TELEGRAM_ID     = '@alphatech000';
 
 // 3. State
 let questions     = [];
@@ -64,11 +66,10 @@ function startQuiz() {
     return;
   }
 
-  // Shuffle and prepare questions
+  // Shuffle & load questions
   questions = allQuestions.slice();
   shuffle(questions);
 
-  // Show quiz view
   toggle("intro", false);
   toggle("quiz",  true);
 
@@ -76,14 +77,13 @@ function startQuiz() {
   showQuestion();
 }
 
-// 6. Show Question
+// 6. Display Question
 function showQuestion() {
   clearInterval(timerInterval);
   const qObj = questions[currentIndex];
 
   document.getElementById("question-text").innerText =
     `${currentIndex + 1}. ${qObj.q}`;
-
   const container = document.getElementById("answer-options");
   container.innerHTML = "";
   document.getElementById("nextBtn").disabled = true;
@@ -113,7 +113,6 @@ function showQuestion() {
 // 7. Handle Answer
 function handleAnswer(given, correct) {
   if (correct && given === correct) correctCount++;
-
   document.querySelectorAll("#answer-options button")
           .forEach(b => b.disabled = true);
   clearInterval(timerInterval);
@@ -171,15 +170,5 @@ function finishQuiz() {
   document.getElementById("detailed-score").innerText =
     `You answered ${correctCount} of ${TOTAL_QUESTIONS} correctly.`;
 
-  document.getElementById("result-message").innerText =
-    passed
-      ? "✅ Congratulations! You're shortlisted for the interview."
-      : "❌ Thank you for your time. Better luck next time.";
-}
-
-// 11. Bind Events & Screaming Welcome on DOM Ready
-document.addEventListener("DOMContentLoaded", () => {
-  alert("🚀 WELCOME TO ALPHA!!! 🚀");
-  document.getElementById("startBtn").addEventListener("click", startQuiz);
-  document.getElementById("nextBtn").addEventListener("click", nextQuestion);
-});
+  if (passed) {
+    document.getElementById("result-message").
