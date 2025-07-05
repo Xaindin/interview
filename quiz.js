@@ -1,36 +1,18 @@
-// 1. Config
-const PASS_THRESHOLD   = 4;
-const TOTAL_QUESTIONS  = allQuestions.length;
+// quiz.js
 
-// 2. Question Bank
+// 1. Question Bank (MUST come first)
 const allQuestions = [
   { q: "How do you prefer to work?", type: "mcq",
     options: ["Alone", "In a team", "Hybrid", "Remote-only"], correct: "In a team" },
   { q: "What’s your current job role?", type: "text" },
   { q: "What is 12 × 8?", type: "mcq",
     options: ["96", "88", "84", "108"], correct: "96", timer: 10 },
-  { q: "Write one line describing your work ethic.", type: "text" },
-  { q: "What motivates you the most?", type: "mcq",
-    options: ["Growth & learning", "Recognition", "Salary", "Job security"], correct: "Growth & learning" },
-  { q: "How do you prioritize tasks when everything seems important?", type: "mcq",
-    options: ["Tackle urgent first", "Focus on long-term", "Delegate", "By order"], correct: "Tackle urgent first" },
-  { q: "What’s one goal you want to achieve this year?", type: "text" },
-  { q: "What is 15 divided by 3?", type: "mcq",
-    options: ["3", "4", "5", "6"], correct: "5" },
-  { q: "What does 'HTTP' stand for?", type: "mcq",
-    options: ["Hypertext Transfer Protocol","High Tech Platform","Hyper Transport Protocol","None"],
-    correct: "Hypertext Transfer Protocol", timer: 10 },
-  { q: "Pick the odd one out: Apple, Banana, Orange, Chair", type: "mcq",
-    options: ["Apple","Banana","Orange","Chair"], correct: "Chair" },
-  { q: "What’s your expected monthly salary (USD)?", type: "mcq",
-    options: ["<500","500–1000","1000–1500","1500+"], correct: "500–1000" },
-  { q: "Are you currently employed?", type: "mcq",
-    options: ["Yes","No"], correct: "No" },
-  { q: "How do you handle missed deadlines?", type: "mcq",
-    options: ["Communicate early","Work overtime","Ignore","Blame"], correct: "Communicate early" },
-  { q: "How do you handle criticism?", type: "text" },
-  { q: "Why should we hire you?", type: "text" }
+  /* … the rest of your questions … */
 ];
+
+// 2. Configuration (now safe to reference allQuestions)
+const PASS_THRESHOLD  = 4;
+const TOTAL_QUESTIONS = allQuestions.length;
 
 // 3. State
 let questions     = [];
@@ -114,7 +96,8 @@ function handleAnswer(given, correct) {
 
   const nextBtn = document.getElementById("nextBtn");
   nextBtn.disabled   = false;
-  nextBtn.innerText  = currentIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Finish";
+  nextBtn.innerText  =
+    currentIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Finish";
 }
 
 // 8. Timer
@@ -129,7 +112,8 @@ function startTimer(sec) {
     if (t <= 0) {
       clearInterval(timerInterval);
       document.getElementById("nextBtn").disabled = false;
-      document.querySelectorAll("#answer-options button").forEach(b => b.disabled = true);
+      document.querySelectorAll("#answer-options button")
+              .forEach(b => b.disabled = true);
     }
   }, 1000);
 }
@@ -153,9 +137,11 @@ function finishQuiz() {
   const passed  = correctCount >= PASS_THRESHOLD;
   const percent = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
 
-  document.getElementById("resultName").innerText   = candidate.fullName;
+  document.getElementById("resultName").innerText = candidate.fullName;
   const statusEl = document.getElementById("resultStatus");
-  statusEl.textContent = passed ? `Pass (${percent}%)` : `Fail (${percent}%)`;
+  statusEl.textContent = passed
+    ? `Pass (${percent}%)`
+    : `Fail (${percent}%)`;
   statusEl.classList.toggle("pass", passed);
   statusEl.classList.toggle("fail", !passed);
 
@@ -164,10 +150,12 @@ function finishQuiz() {
 
   document.getElementById("result-message").innerText =
     passed
-      ? "✅ Congratulations! You're shortlisted for the interview. Please save this screenshot."
+      ? "✅ Congratulations! You're shortlisted for the interview."
       : "❌ Thank you for your time. Better luck next time.";
 }
 
-// 11. Bind Events
-document.getElementById("startBtn").addEventListener("click", startQuiz);
-document.getElementById("nextBtn").addEventListener("click", nextQuestion);
+// 11. Bind Events on DOM Ready
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("startBtn").addEventListener("click", startQuiz);
+  document.getElementById("nextBtn").addEventListener("click", nextQuestion);
+});
