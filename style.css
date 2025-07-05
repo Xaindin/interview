@@ -3,6 +3,7 @@
   --panel-bg:    #fafafa;
   --text-dark:   #222222;
   --gold:        #ffd700;
+  --danger:      #e74c3c;
   --font-family: 'Helvetica Neue', Arial, sans-serif;
   --radius:      6px;
 }
@@ -18,21 +19,7 @@ body {
   line-height: 1.5;
 }
 
-/* Logo Header */
-.logo-header {
-  background: var(--white);
-  text-align: center;
-  padding: 2rem 0;
-}
-.logo.big-logo {
-  height: 120px;      /* bigger logo */
-  border-radius: 50%;
-  border: 3px solid var(--gold);
-  padding: 10px;
-  background: var(--white);
-}
-
-/* Wrapper & Panels */
+/* Container Panels */
 .wrapper {
   width: 90%;
   max-width: 600px;
@@ -44,6 +31,25 @@ body {
   padding: 2rem 1.5rem;
   margin-bottom: 1.5rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Shouting Welcome */
+.welcome-container {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+@keyframes scream {
+  0%   { transform: scale(1) rotate(0); color: var(--danger); }
+  25%  { transform: scale(1.1) rotate(-3deg); color: var(--gold); }
+  50%  { transform: scale(1) rotate(3deg); color: var(--danger); }
+  75%  { transform: scale(1.1) rotate(3deg); color: var(--gold); }
+  100% { transform: scale(1) rotate(0); color: var(--danger); }
+}
+.scream-text {
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  animation: scream 0.6s ease-in-out infinite;
 }
 
 /* Headings */
@@ -164,7 +170,7 @@ button:hover:not(:disabled) {
   font-weight: 600;
 }
 .fail {
-  color: #e74c3c;
+  color: var(--danger);
   font-weight: 600;
 }
 
