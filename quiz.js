@@ -1,16 +1,36 @@
 // quiz.js
 
-// 1. Question Bank (MUST come first)
+// 1. Question Bank (define your full list here)
 const allQuestions = [
   { q: "How do you prefer to work?", type: "mcq",
     options: ["Alone", "In a team", "Hybrid", "Remote-only"], correct: "In a team" },
   { q: "What’s your current job role?", type: "text" },
   { q: "What is 12 × 8?", type: "mcq",
     options: ["96", "88", "84", "108"], correct: "96", timer: 10 },
-  /* … the rest of your questions … */
+  { q: "Write one line describing your work ethic.", type: "text" },
+  { q: "What motivates you the most?", type: "mcq",
+    options: ["Growth & learning", "Recognition", "Salary", "Job security"], correct: "Growth & learning" },
+  { q: "How do you prioritize tasks when everything seems important?", type: "mcq",
+    options: ["Tackle urgent first", "Focus on long-term", "Delegate", "By order"], correct: "Tackle urgent first" },
+  { q: "What’s one goal you want to achieve this year?", type: "text" },
+  { q: "What is 15 divided by 3?", type: "mcq",
+    options: ["3", "4", "5", "6"], correct: "5" },
+  { q: "What does 'HTTP' stand for?", type: "mcq",
+    options: ["Hypertext Transfer Protocol","High Tech Platform","Hyper Transport Protocol","None"],
+    correct: "Hypertext Transfer Protocol", timer: 10 },
+  { q: "Pick the odd one out: Apple, Banana, Orange, Chair", type: "mcq",
+    options: ["Apple","Banana","Orange","Chair"], correct: "Chair" },
+  { q: "What’s your expected monthly salary (USD)?", type: "mcq",
+    options: ["<500","500–1000","1000–1500","1500+"], correct: "500–1000" },
+  { q: "Are you currently employed?", type: "mcq",
+    options: ["Yes","No"], correct: "No" },
+  { q: "How do you handle missed deadlines?", type: "mcq",
+    options: ["Communicate early","Work overtime","Ignore","Blame"], correct: "Communicate early" },
+  { q: "How do you handle criticism?", type: "text" },
+  { q: "Why should we hire you?", type: "text" }
 ];
 
-// 2. Configuration (now safe to reference allQuestions)
+// 2. Configuration
 const PASS_THRESHOLD  = 4;
 const TOTAL_QUESTIONS = allQuestions.length;
 
@@ -28,6 +48,7 @@ function shuffle(arr) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
 }
+
 function toggle(id, show) {
   document.getElementById(id).hidden = !show;
 }
@@ -43,10 +64,11 @@ function startQuiz() {
     return;
   }
 
-  // Prepare & shuffle questions
+  // Shuffle and prepare questions
   questions = allQuestions.slice();
   shuffle(questions);
 
+  // Show quiz view
   toggle("intro", false);
   toggle("quiz",  true);
 
@@ -61,6 +83,7 @@ function showQuestion() {
 
   document.getElementById("question-text").innerText =
     `${currentIndex + 1}. ${qObj.q}`;
+
   const container = document.getElementById("answer-options");
   container.innerHTML = "";
   document.getElementById("nextBtn").disabled = true;
@@ -82,7 +105,7 @@ function showQuestion() {
     input.oninput = () => {
       document.getElementById("nextBtn").disabled = !input.value.trim();
     };
-    input.onblur   = () => handleAnswer(input.value.trim(), null);
+    input.onblur = () => handleAnswer(input.value.trim(), null);
     container.appendChild(input);
   }
 }
@@ -90,14 +113,14 @@ function showQuestion() {
 // 7. Handle Answer
 function handleAnswer(given, correct) {
   if (correct && given === correct) correctCount++;
+
   document.querySelectorAll("#answer-options button")
           .forEach(b => b.disabled = true);
   clearInterval(timerInterval);
 
   const nextBtn = document.getElementById("nextBtn");
-  nextBtn.disabled   = false;
-  nextBtn.innerText  =
-    currentIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Finish";
+  nextBtn.disabled  = false;
+  nextBtn.innerText = (currentIndex < TOTAL_QUESTIONS - 1) ? "Next" : "Finish";
 }
 
 // 8. Timer
@@ -154,8 +177,9 @@ function finishQuiz() {
       : "❌ Thank you for your time. Better luck next time.";
 }
 
-// 11. Bind Events on DOM Ready
+// 11. Bind Events & Screaming Welcome on DOM Ready
 document.addEventListener("DOMContentLoaded", () => {
+  alert("🚀 WELCOME TO ALPHA!!! 🚀");
   document.getElementById("startBtn").addEventListener("click", startQuiz);
   document.getElementById("nextBtn").addEventListener("click", nextQuestion);
 });
